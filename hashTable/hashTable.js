@@ -1,9 +1,9 @@
 const { memoize, simpleHash } = require('../utils');
-const lList = require('../linkedList');
+const lList = require('../linkedList/linkedList');
 
 const DEFAULT_HASH_SIZE = 1000;
 
-const create = (values, size = DEFAULT_HASH_SIZE) => values.reduce(insert, new Array(size));
+const create = (values = [], size = DEFAULT_HASH_SIZE) => values.reduce(insert, new Array(size));
 
 const getIndex = memoize((hashTable, value) => simpleHash(value) % hashTable.length, (hashTable, value) => `${value}${hashTable.length}`);
 

@@ -3,7 +3,6 @@ const bTree = require('./binaryTree');
 describe('binaryTree', () => {
   describe('create', () => {
     it('should create a correct empty binary tree', () => {
-      const tree = bTree.create();
       expect(bTree.create()).toEqual(undefined);
     });
     it('should create a correct binary tree populated with values', () => {
