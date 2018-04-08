@@ -50,6 +50,18 @@ describe('linkedList', () => {
       expect(lList.checkIfExists(list, 5)).toBe(true);
     });
   });
+  describe('length', () => {
+    it('should get a list\'s correct length', () => {
+      const list = lList.create(1, 2, 3, 4);
+      expect(lList.length(list)).toEqual(4);
+      const list2 = lList.create(1, 2, 3, 4, 5);
+      expect(lList.length(list2)).toEqual(5);
+    });
+    it('should not explode when passed an empty list', () => {
+      const list = lList.create();
+      expect(lList.length(list)).toEqual(0);
+    });
+  });
   describe('toArray', () => {
     it('should successfully turn a list into an array', () => {
       const list = lList.create(1, 2, 3, 4);

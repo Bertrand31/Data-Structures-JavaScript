@@ -39,6 +39,12 @@ const remove = (lList, value, index = 0, prevIndex = null) => {
   return lList;
 };
 
+const length = (lList, index = 0, size = 0) => (
+  lList[index].next === null
+    ? size
+    : length(lList, lList[index].next, size + 1)
+);
+
 const toArray = (lList, index = 0) => {
   if (index === 0) {
     if (lList[0].next === null) return [];
@@ -53,5 +59,6 @@ module.exports = {
   insert,
   checkIfExists,
   remove,
+  length,
   toArray,
 };
