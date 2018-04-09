@@ -36,8 +36,8 @@ const remove = (hashTable, value) => {
 
 const toArray = hashTable => (
   hashTable.reduce((acc, item) => (
-    typeof item !== 'undefined'
-      ? acc.concat(item)
+    Array.isArray(item)
+      ? acc.concat(lList.toArray(item))
       : acc
   ), [])
 );
