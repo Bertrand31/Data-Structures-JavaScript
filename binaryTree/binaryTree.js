@@ -31,8 +31,22 @@ const overrideRoot = (tree) => {
   };
 };
 
+const toArray = (tree, acc = []) => (
+  tree === undefined
+    ? acc
+    : [...acc, tree.value, ...toArray(tree.left), ...toArray(tree.right)]
+);
+
+const size = (tree, total = 0) => (
+  tree === undefined
+    ? total
+    : total + 1 + size(tree.left) + size(tree.right)
+);
+
 module.exports = {
   create,
   insert,
   remove,
+  toArray,
+  size,
 };

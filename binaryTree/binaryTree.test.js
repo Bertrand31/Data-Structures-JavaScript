@@ -72,4 +72,28 @@ describe('binaryTree', () => {
       });
     });
   });
+  describe('toArray', () => {
+    it('should return an empty array from an empty tree', () => {
+      const tree = bTree.create();
+      expect(bTree.toArray(tree)).toEqual([]);
+    });
+    it('should return a proper array when given a populated tree', () => {
+      const tree = bTree.create(2, 1, 6, 8);
+      expect(bTree.toArray(tree)).toEqual([2, 1, 6, 8]);
+      const tree2 = bTree.create(0, 4, 3, 4);
+      expect(bTree.toArray(tree2)).toEqual([0, 4, 3]);
+    });
+  });
+  describe('size', () => {
+    it('should return zero for an empty tree', () => {
+      const tree = bTree.create();
+      expect(bTree.size(tree)).toEqual(0);
+    });
+    it('should return a the correct number for a populated tree', () => {
+      const tree = bTree.create(2, 1, 6, 8);
+      expect(bTree.size(tree)).toEqual(4);
+      const tree2 = bTree.create(0, 4, 3, 4);
+      expect(bTree.size(tree2)).toEqual(3);
+    });
+  });
 });
