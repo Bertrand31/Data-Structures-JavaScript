@@ -36,7 +36,7 @@ const remove = (hashTable, value) => {
 
 const toArray = hashTable => (
   hashTable.reduce((acc, item) => (
-    Array.isArray(item)
+    lList.isLinkedList(item)
       ? acc.concat(lList.toArray(item))
       : acc
   ), [])

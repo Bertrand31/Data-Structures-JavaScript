@@ -54,6 +54,8 @@ const toArray = (lList, index = 0) => {
   return [lList[index].value, ...toArray(lList, lList[index].next)];
 };
 
+const isLinkedList = lList => Array.isArray(lList) && 'next' in lList[0] && 'value' in lList[0];
+
 module.exports = {
   create,
   insert,
@@ -61,4 +63,5 @@ module.exports = {
   remove,
   length,
   toArray,
+  isLinkedList,
 };
