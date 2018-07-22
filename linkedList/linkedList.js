@@ -1,3 +1,4 @@
+const { update } = require('ramda');
 const { simpleHash } = require('../utils');
 
 // We are using a JS array to simulate a range of memory available.
@@ -22,6 +23,15 @@ const getIndex = (lList, value) => simpleHash(value) % lList.length;
 const checkIfExists = (lList, value, index = 0) => (
   lList[index].value === value || (lList[index].next !== null && checkIfExists(lList, value, lList[index].next))
 );
+
+const slice = (target, lList, current = 0, hops = 0) => {
+  if (hops === target) {
+    return update(0, lList[current], lList);
+  }
+  const next = lList[current].next;
+  if (next === null) return lList;
+  return slice(target, lList, next, ++hops);
+};
 
 const remove = (lList, value, index = 0, prevIndex = null) => {
   if (lList[index].value !== value && lList[index].next === null) return lList;
@@ -60,6 +70,7 @@ module.exports = {
   create,
   insert,
   checkIfExists,
+  slice,
   remove,
   length,
   toArray,

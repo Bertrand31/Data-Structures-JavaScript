@@ -94,4 +94,28 @@ describe('linkedList', () => {
       expect(lList.toArray(newList)).toEqual([3, 2, 1]);
     });
   });
+  describe('slice', () => {
+    it('should slice a linked list', () => {
+      const list = lList.create(4, 3, 2, 1);
+      const newList = lList.slice(2, list);
+      expect(lList.toArray(newList)).toEqual([3, 4]);
+    });
+    it('should handle off-limit target', () => {
+      const list = lList.create(4, 3, 2, 1);
+      const newList = lList.slice(4, list);
+      expect(lList.toArray(newList)).toEqual([]);
+    });
+    it('should handle a target of 0', () => {
+      const list = lList.create(4, 3, 2, 1);
+      const newList = lList.slice(0, list);
+      expect(lList.toArray(newList)).toEqual([1, 2, 3, 4]);
+    });
+  });
+  describe('reverse', () => {
+    it('should reverse a list successfuly', () => {
+      const list = lList.create(4, 3, 2, 1);
+      const newList = lList.reverse(list);
+      expect(lList.toArray(newList)).toEqual([4, 3, 2, 1]);
+    });
+  });
 });
