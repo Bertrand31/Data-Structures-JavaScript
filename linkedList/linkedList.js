@@ -45,12 +45,12 @@ class LinkedList {
 
   take = (until, hops = 1) => {
     if (this.value === null) return this;
-    if (hops >== until) return new LinkedList(this.value, new LinkedList());
+    if (hops >= until) return new LinkedList(this.value, new LinkedList());
     return new LinkedList(this.value, this.next.take(until, hops + 1));
   }
 
   drop = (from, hops = 0) => (
-    (hops >== from || this.value === null)
+    (hops >= from || this.value === null)
       ? this
       : this.next.drop(from, hops + 1)
   )
@@ -59,6 +59,12 @@ class LinkedList {
     if (this.next === null) return null;
     if (predicate(this.value)) return this.value;
     return this.next.find(predicate);
+  }
+
+  remove = (predicate) => {
+    if (this.next === null) return null;
+    if (predicate(this.value)) return this.next;
+    return new LinkedList(this.value, this.next.remove(predicate));
   }
 }
 
