@@ -1,78 +1,65 @@
-const { update } = require('ramda');
-const { simpleHash } = require('../utils');
-
-// We are using a JS array to simulate a range of memory available.
-// The getIndex function is used to simulate requesting the system for an available memory address
-// Issue not addressed: collisions of the getIndex function
-
-const MEMORY_SIZE = 1000;
-
-const genBaseArr = () => [{ value: null, next: null }, ...new Array(MEMORY_SIZE - 1)];
-
-const create = (...arr) => arr.reduce(insert, genBaseArr());
-
-const insert = (lList, value) => {
-  const index = getIndex(lList, value);
-  lList[index] = { value, next: lList[0].next };
-  lList[0].next = index;
-  return lList;
-};
-
-const getIndex = (lList, value) => simpleHash(value) % lList.length;
-
-const checkIfExists = (lList, value, index = 0) => (
-  lList[index].value === value || (lList[index].next !== null && checkIfExists(lList, value, lList[index].next))
-);
-
-const slice = (target, lList, current = 0, hops = 0) => {
-  if (hops === target) {
-    return update(0, lList[current], lList);
+class LinkedList {
+  constructor(value = null, next = null) {
+    this.value = value;
+    this.next = next;
   }
-  const next = lList[current].next;
-  if (next === null) return lList;
-  return slice(target, lList, next, ++hops);
-};
 
-const remove = (lList, value, index = 0, prevIndex = null) => {
-  if (lList[index].value !== value && lList[index].next === null) return lList;
-  if (lList[index].value !== value) return remove(lList, value, lList[index].next, index);
-  // the node we want to delete happens to be the last one. We have to go back to the previous one to remove its reference
-  if (lList[index].next === null) {
-    // the linked list only has one node
-    if (prevIndex === null) return [{ value: null, next: null }];
-    lList[prevIndex].next = null;
-    return lList;
+  prepend = value => new LinkedList(value, this)
+
+  prependMany = (...values) => (
+    values.reduce((acc, value) => acc.prepend(value), this)
+  )
+
+  toArray = (soFar = []) => (
+    this.value === null
+      ? soFar
+      : this.next.toArray([...soFar, this.value])
+  )
+
+  length = (soFar = 0) => (
+    this.next === null
+      ? soFar
+      : this.next.length(soFar + 1)
+  )
+
+  map = fn => (
+    this.next === null
+      ? this
+      : new LinkedList(unaryFn(this.value), this.next.map(unaryFn))
+  )
+
+  filter = (predicate) => {
+    if (this.next === null) return this;
+    if (!predicate(this.value)) return this.next.filter(predicate);
+    return new LinkedList(this.value, this.next.filter(predicate));
   }
-  // the matching node is somewhere in the list, not at the end: we simply make the previous node point to the next one,
-  // effectively making the matching node an orphan
-  lList[prevIndex].next = lList[index].next;
-  return lList;
-};
 
-const length = (lList, index = 0, size = 0) => (
-  lList[index].next === null
-    ? size
-    : length(lList, lList[index].next, size + 1)
-);
-
-const toArray = (lList, index = 0) => {
-  if (index === 0) {
-    if (lList[0].next === null) return [];
-    return toArray(lList, lList[0].next);
+  flatten = (tabbed = null) => {
+    if (this.next === null && tabbed === null) return this;
+    if (this.next === null) return tabbed.flatten();
+    if (this.value instanceof LinkedList) return this.value.flatten(this.next);
+    return new LinkedList(this.value, this.next.flatten(tabbed));
   }
-  if (lList[index].next === null) return [lList[index].value];
-  return [lList[index].value, ...toArray(lList, lList[index].next)];
-};
 
-const isLinkedList = lList => Array.isArray(lList) && 'next' in lList[0] && 'value' in lList[0];
+  flatMap = fn => this.map(fn).flatten()
 
-module.exports = {
-  create,
-  insert,
-  checkIfExists,
-  slice,
-  remove,
-  length,
-  toArray,
-  isLinkedList,
-};
+  take = (until, hops = 1) => {
+    if (this.value === null) return this;
+    if (hops >== until) return new LinkedList(this.value, new LinkedList());
+    return new LinkedList(this.value, this.next.take(until, hops + 1));
+  }
+
+  drop = (from, hops = 0) => (
+    (hops >== from || this.value === null)
+      ? this
+      : this.next.drop(from, hops + 1)
+  )
+
+  find = (predicate) => {
+    if (this.next === null) return null;
+    if (predicate(this.value)) return this.value;
+    return this.next.find(predicate);
+  }
+}
+
+module.exports = LinkedList;
