@@ -28,9 +28,7 @@ class LRU {
   get = (key) => {
     const entry = this.data.get(key);
     if (typeof entry !== 'undefined') {
-      console.log(this.heap.toArray());
       this.heap.remove(key);
-      console.log(this.heap.toArray());
       this.heap.push({ key, time: Date.now() });
     }
     return entry;
@@ -41,7 +39,7 @@ class LRU {
   toArray = () => Array.from(this.data.values())
 }
 
-// :: Number -> (Any -> Any) -> (Any -> Any)
+// :: Number -> (...Any -> Any) -> (...Any -> Any)
 const memoizeWithLRU = (nbOfItems, makeKey, fn) => {
   const cache = new LRU(nbOfItems);
   return (...args) => {
